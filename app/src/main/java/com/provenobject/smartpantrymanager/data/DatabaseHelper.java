@@ -114,4 +114,29 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         return pantryItems;
     }
+
+    // Updates an existing pantry item in the database
+
+    public int updatePantryItem(PantryItem item) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+
+        values.put(COLUMN_NAME, item.getName());
+        values.put(COLUMN_QUANTITY, item.getQuantity());
+        values.put(COLUMN_UNIT, item.getUnit());
+        values.put(COLUMN_EXPIRY_DATE, item.getExpiryDate());
+
+        int rowsUpdated = db.update(
+                TABLE_PANTRY,
+                values,
+                COLUMN_ID + " = ?",
+                new String[]{String.valueOf(item.getId())}
+        );
+
+        db.close();
+
+        return rowsUpdated;
+    }
 }
