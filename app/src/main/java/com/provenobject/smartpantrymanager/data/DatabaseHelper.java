@@ -116,7 +116,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     // Updates an existing pantry item in the database
-
     public int updatePantryItem(PantryItem item) {
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -138,5 +137,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
 
         return rowsUpdated;
+    }
+
+    // Deletes a pantry item from the database
+    public int deletePantryItem(int id) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        int rowsDeleted = db.delete(
+                TABLE_PANTRY,
+                COLUMN_ID + " = ?",
+                new String[]{String.valueOf(id)}
+        );
+
+        db.close();
+
+        return rowsDeleted;
     }
 }
