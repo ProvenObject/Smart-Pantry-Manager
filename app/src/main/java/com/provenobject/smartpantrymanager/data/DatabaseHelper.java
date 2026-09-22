@@ -2,10 +2,14 @@ package com.provenobject.smartpantrymanager.data;
 
 import android.content.Context;
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.provenobject.smartpantrymanager.model.PantryItem;
+
+import java.util.ArrayList;
+import java.util.List;
 
 // Manages the local SQLite database used by Smart Pantry Manager
 public class DatabaseHelper extends SQLiteOpenHelper {
@@ -67,5 +71,47 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
 
         return id;
+    }
+
+    // Retrieves all pantry items in the database (list)
+
+    public List<PantryItem> getAllPantryItems() {
+        List<PantryItem> pantryItems = new ArrayList<>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query(
+                TABLE_PANTRY,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                COLUMN_NAME + " ASC"
+        );
+
+        while (cursor.moveToNext()) {
+            int id = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID));
+            String name = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME));
+            double quantity = cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_QUANTITY));
+            String unit = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_UNIT));
+            String expiryDate = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_EXPIRY_DATE));
+
+            PantryItem item = new PantryItem(
+                    id,
+                    name,
+                    quantity,
+                    unit,
+                    expiryDate
+            );
+
+            pantryItems.add(item);
+        }
+
+        cursor.close();
+        db.close();
+
+        return pantryItems;
     }
 }
