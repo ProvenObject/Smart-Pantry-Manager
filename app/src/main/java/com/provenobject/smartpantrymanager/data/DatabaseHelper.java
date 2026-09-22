@@ -1,9 +1,13 @@
 package com.provenobject.smartpantrymanager.data;
 
 import android.content.Context;
+import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.provenobject.smartpantrymanager.model.PantryItem;
+
+// Manages the local SQLite database used by Smart Pantry Manager
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     // Database information
@@ -43,5 +47,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_PANTRY);
         onCreate(db);
+    }
+
+    // Adds a new pantry item to the database
+
+    public long addPantryItem(PantryItem item) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+
+        values.put(COLUMN_NAME, item.getName());
+        values.put(COLUMN_QUANTITY, item.getQuantity());
+        values.put(COLUMN_UNIT, item.getUnit());
+        values.put(COLUMN_EXPIRY_DATE, item.getExpiryDate());
+
+        long id = db.insert(TABLE_PANTRY, null, values);
+
+        db.close();
+
+        return id;
     }
 }
