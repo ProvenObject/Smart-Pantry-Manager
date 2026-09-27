@@ -87,8 +87,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 null,
                 null,
                 null,
-                null,
-                COLUMN_NAME + " ASC"
+                COLUMN_NAME + " ASC",
+                null
         );
 
         while (cursor.moveToNext()) {
