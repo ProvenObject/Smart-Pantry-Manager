@@ -91,7 +91,13 @@ public class MainActivity extends AppCompatActivity {
 
                         @Override
                         public void onDelete(PantryItem item) {
-                            // Delete functionality will be added next
+
+                            int rowsDeleted =
+                                    databaseHelper.deletePantryItem(item.getId());
+
+                            if (rowsDeleted > 0) {
+                                loadPantryItems();
+                            }
                         }
                     }
             );
