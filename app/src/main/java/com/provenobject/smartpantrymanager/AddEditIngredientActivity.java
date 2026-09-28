@@ -132,24 +132,50 @@ public class AddEditIngredientActivity extends AppCompatActivity {
         );
 
         // Save the pantry item to SQLite
-        long id = databaseHelper.addPantryItem(item);
+        if (editingItemId == -1) {
 
-        if (id != -1) {
-            Toast.makeText(
-                    this,
-                    "Ingredient saved",
-                    Toast.LENGTH_SHORT
-            ).show();
+            // No existing ID means we are adding a new ingredient.
+            long id = databaseHelper.addPantryItem(item);
 
-            // Close this activity and return to the previous screen
-            finish();
+            if (id != -1) {
+                Toast.makeText(
+                        this,
+                        "Ingredient saved",
+                        Toast.LENGTH_SHORT
+                ).show();
+
+                finish();
+            } else {
+                Toast.makeText(
+                        this,
+                        "Failed to save ingredient",
+                        Toast.LENGTH_SHORT
+                ).show();
+            }
 
         } else {
-            Toast.makeText(
-                    this,
-                    "Failed to save ingredient",
-                    Toast.LENGTH_SHORT
-            ).show();
+
+            // Existing ID means we are updating an existing ingredient.
+            item.setId(editingItemId);
+
+            int rowsUpdated =
+                    databaseHelper.updatePantryItem(item);
+
+            if (rowsUpdated > 0) {
+                Toast.makeText(
+                        this,
+                        "Ingredient updated",
+                        Toast.LENGTH_SHORT
+                ).show();
+
+                finish();
+            } else {
+                Toast.makeText(
+                        this,
+                        "Failed to update ingredient",
+                        Toast.LENGTH_SHORT
+                ).show();
+            }
         }
     }
 }
