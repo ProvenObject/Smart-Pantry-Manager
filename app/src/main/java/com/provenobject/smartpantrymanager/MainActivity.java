@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.provenobject.smartpantrymanager.adapter.PantryAdapter;
 import com.provenobject.smartpantrymanager.data.DatabaseHelper;
 import com.provenobject.smartpantrymanager.model.PantryItem;
+import com.provenobject.smartpantrymanager.model.Recipe;
 
 import java.util.List;
 
