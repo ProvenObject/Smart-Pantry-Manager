@@ -3,6 +3,7 @@ package com.provenobject.smartpantrymanager.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,11 +17,21 @@ import java.util.List;
 // Adapter responsible for displaying pantry items inside the RecyclerView
 public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.PantryViewHolder> {
 
+    public interface OnPantryItemActionListener {
+        void onEdit(PantryItem item);
+        void onDelete(PantryItem item);
+    }
+
     private List<PantryItem> pantryItems;
+    private OnPantryItemActionListener listener;
 
     // Creates the adapter with the pantry items that should be displayed
-    public PantryAdapter(List<PantryItem> pantryItems) {
+    public PantryAdapter(
+            List<PantryItem> pantryItems,
+            OnPantryItemActionListener listener
+    ) {
         this.pantryItems = pantryItems;
+        this.listener = listener;
     }
 
     // Creates a new ViewHolder when the RecyclerView needs a new item view
@@ -65,6 +76,15 @@ public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.PantryView
                     "Expiry: " + item.getExpiryDate()
             );
         }
+
+        holder.btnEditIngredient.setOnClickListener(v -> {
+            listener.onEdit(item);
+        });
+
+        holder.btnDeleteIngredient.setOnClickListener(v -> {
+            listener.onDelete(item);
+        });
+
     }
 
     // Returns the number of pantry items currently displayed by the adapter
@@ -81,6 +101,9 @@ public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.PantryView
         TextView tvIngredientQuantity;
         TextView tvIngredientExpiry;
 
+        Button btnEditIngredient;
+        Button btnDeleteIngredient;
+
         public PantryViewHolder(@NonNull View itemView) {
             super(itemView);
 
@@ -92,6 +115,13 @@ public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.PantryView
 
             tvIngredientExpiry =
                     itemView.findViewById(R.id.tvIngredientExpiry);
+
+
+            btnEditIngredient =
+                    itemView.findViewById(R.id.btnEditIngredient);
+
+            btnDeleteIngredient =
+                    itemView.findViewById(R.id.btnDeleteIngredient);
         }
     }
 }

@@ -72,7 +72,29 @@ public class MainActivity extends AppCompatActivity {
             tvEmptyMessage.setVisibility(View.GONE);
             recyclerPantry.setVisibility(View.VISIBLE);
 
-            pantryAdapter = new PantryAdapter(pantryItems);
+            pantryAdapter = new PantryAdapter(
+                    pantryItems,
+                    new PantryAdapter.OnPantryItemActionListener() {
+
+                        @Override
+                        public void onEdit(PantryItem item) {
+
+                            Intent intent = new Intent(
+                                    MainActivity.this,
+                                    AddEditIngredientActivity.class
+                            );
+
+                            intent.putExtra("pantry_item_id", item.getId());
+
+                            startActivity(intent);
+                        }
+
+                        @Override
+                        public void onDelete(PantryItem item) {
+                            // Delete functionality will be added next
+                        }
+                    }
+            );
             recyclerPantry.setAdapter(pantryAdapter);
         }
     }

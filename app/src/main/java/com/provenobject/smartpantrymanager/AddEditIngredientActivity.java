@@ -3,6 +3,7 @@ package com.provenobject.smartpantrymanager;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,6 +25,8 @@ public class AddEditIngredientActivity extends AppCompatActivity {
 
     private DatabaseHelper databaseHelper;
 
+    private int editingItemId = -1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +42,34 @@ public class AddEditIngredientActivity extends AppCompatActivity {
 
         // Create the database helper used to store pantry items
         databaseHelper = new DatabaseHelper(this);
+
+        editingItemId = getIntent().getIntExtra("pantry_item_id", -1);
+
+        if (editingItemId != -1) {
+            TextView tvFormTitle = findViewById(R.id.tvFormTitle);
+            tvFormTitle.setText("Edit Ingredient");
+        }
+
+        if (editingItemId != -1) {
+
+            PantryItem item =
+                    databaseHelper.getPantryItemById(editingItemId);
+
+            if (item != null) {
+
+                etIngredientName.setText(item.getName());
+
+                etQuantity.setText(
+                        String.valueOf(item.getQuantity())
+                );
+
+                etUnit.setText(item.getUnit());
+
+                if (item.getExpiryDate() != null) {
+                    etExpiryDate.setText(item.getExpiryDate());
+                }
+            }
+        }
 
         // Save the ingredient when the user presses the button
         btnSaveIngredient.setOnClickListener(v -> saveIngredient());
