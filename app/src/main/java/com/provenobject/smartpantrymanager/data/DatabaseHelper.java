@@ -517,4 +517,68 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         return recipes;
     }
+
+    public List<RecipeIngredient> getRecipeIngredients(int recipeId) {
+
+        List<RecipeIngredient> ingredients = new ArrayList<>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query(
+                TABLE_RECIPE_INGREDIENTS,
+                null,
+                RECIPE_INGREDIENT_RECIPE_ID + " = ?",
+                new String[]{String.valueOf(recipeId)},
+                null,
+                null,
+                RECIPE_INGREDIENT_NAME + " ASC"
+        );
+
+        while (cursor.moveToNext()) {
+
+            int id =
+                    cursor.getInt(
+                            cursor.getColumnIndexOrThrow(
+                                    RECIPE_INGREDIENT_ID
+                            )
+                    );
+
+            String ingredientName =
+                    cursor.getString(
+                            cursor.getColumnIndexOrThrow(
+                                    RECIPE_INGREDIENT_NAME
+                            )
+                    );
+
+            double quantity =
+                    cursor.getDouble(
+                            cursor.getColumnIndexOrThrow(
+                                    RECIPE_INGREDIENT_QUANTITY
+                            )
+                    );
+
+            String unit =
+                    cursor.getString(
+                            cursor.getColumnIndexOrThrow(
+                                    RECIPE_INGREDIENT_UNIT
+                            )
+                    );
+
+            RecipeIngredient ingredient =
+                    new RecipeIngredient(
+                            id,
+                            recipeId,
+                            ingredientName,
+                            quantity,
+                            unit
+                    );
+
+            ingredients.add(ingredient);
+        }
+
+        cursor.close();
+        db.close();
+
+        return ingredients;
+    }
 }
