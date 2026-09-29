@@ -5,6 +5,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -18,7 +20,7 @@ public class AddEditIngredientActivity extends AppCompatActivity {
 
     private EditText etIngredientName;
     private EditText etQuantity;
-    private EditText etUnit;
+    private Spinner spUnit;
     private EditText etExpiryDate;
 
     private Button btnSaveIngredient;
@@ -35,13 +37,35 @@ public class AddEditIngredientActivity extends AppCompatActivity {
         // Connect Java variables to the views in the XML layout
         etIngredientName = findViewById(R.id.etIngredientName);
         etQuantity = findViewById(R.id.etQuantity);
-        etUnit = findViewById(R.id.etUnit);
+        spUnit = findViewById(R.id.spUnit);
         etExpiryDate = findViewById(R.id.etExpiryDate);
 
         btnSaveIngredient = findViewById(R.id.btnSaveIngredient);
 
         // Create the database helper used to store pantry items
         databaseHelper = new DatabaseHelper(this);
+
+        String[] units = {
+                "g",
+                "kg",
+                "ml",
+                "l",
+                "item",
+                "slice"
+        };
+
+        ArrayAdapter<String> unitAdapter =
+                new ArrayAdapter<>(
+                        this,
+                        android.R.layout.simple_spinner_item,
+                        units
+                );
+
+        unitAdapter.setDropDownViewResource(
+                android.R.layout.simple_spinner_dropdown_item
+        );
+
+        spUnit.setAdapter(unitAdapter);
 
         editingItemId = getIntent().getIntExtra("pantry_item_id", -1);
 
@@ -63,7 +87,11 @@ public class AddEditIngredientActivity extends AppCompatActivity {
                         String.valueOf(item.getQuantity())
                 );
 
-                etUnit.setText(item.getUnit());
+                int unitPosition = unitAdapter.getPosition(item.getUnit());
+
+                if (unitPosition >= 0) {
+                    spUnit.setSelection(unitPosition);
+                }
 
                 if (item.getExpiryDate() != null) {
                     etExpiryDate.setText(item.getExpiryDate());
@@ -81,7 +109,7 @@ public class AddEditIngredientActivity extends AppCompatActivity {
 
         String name = etIngredientName.getText().toString().trim();
         String quantityText = etQuantity.getText().toString().trim();
-        String unit = etUnit.getText().toString().trim();
+        String unit = spUnit.getSelectedItem().toString();
         String expiryDate = etExpiryDate.getText().toString().trim();
 
         // Validate the ingredient name
@@ -95,13 +123,6 @@ public class AddEditIngredientActivity extends AppCompatActivity {
         if (quantityText.isEmpty()) {
             etQuantity.setError("Enter a quantity");
             etQuantity.requestFocus();
-            return;
-        }
-
-        // Validate the unit
-        if (unit.isEmpty()) {
-            etUnit.setError("Enter a unit");
-            etUnit.requestFocus();
             return;
         }
 
@@ -140,7 +161,7 @@ public class AddEditIngredientActivity extends AppCompatActivity {
             if (id != -1) {
                 Toast.makeText(
                         this,
-                        "Ingredient saved",
+                        "Ingredient added successfully",
                         Toast.LENGTH_SHORT
                 ).show();
 
@@ -164,7 +185,7 @@ public class AddEditIngredientActivity extends AppCompatActivity {
             if (rowsUpdated > 0) {
                 Toast.makeText(
                         this,
-                        "Ingredient updated",
+                        "Ingredient updated successfully",
                         Toast.LENGTH_SHORT
                 ).show();
 

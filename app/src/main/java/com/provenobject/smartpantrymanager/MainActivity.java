@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,6 +17,8 @@ import com.provenobject.smartpantrymanager.adapter.PantryAdapter;
 import com.provenobject.smartpantrymanager.data.DatabaseHelper;
 import com.provenobject.smartpantrymanager.model.PantryItem;
 import com.provenobject.smartpantrymanager.model.Recipe;
+
+import androidx.appcompat.app.AlertDialog;
 
 import java.util.List;
 
@@ -66,6 +69,17 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+        Button btnSettings = findViewById(R.id.btnSettings);
+
+        btnSettings.setOnClickListener(v -> {
+            Intent intent = new Intent(
+                    MainActivity.this,
+                    SettingsActivity.class
+            );
+
+            startActivity(intent);
+        });
+
         loadPantryItems();
     }
 
@@ -104,12 +118,31 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onDelete(PantryItem item) {
 
-                            int rowsDeleted =
-                                    databaseHelper.deletePantryItem(item.getId());
+                            new AlertDialog.Builder(MainActivity.this)
+                                    .setTitle("Delete ingredient?")
+                                    .setMessage(
+                                            "Are you sure you want to delete \""
+                                                    + item.getName()
+                                                    + "\"?"
+                                    )
+                                    .setNegativeButton("Cancel", null)
+                                    .setPositiveButton("Delete", (dialog, which) -> {
 
-                            if (rowsDeleted > 0) {
-                                loadPantryItems();
-                            }
+                                        int rowsDeleted =
+                                                databaseHelper.deletePantryItem(item.getId());
+
+                                        if (rowsDeleted > 0) {
+
+                                            Toast.makeText(
+                                                    MainActivity.this,
+                                                    "Ingredient deleted successfully",
+                                                    Toast.LENGTH_SHORT
+                                            ).show();
+
+                                            loadPantryItems();
+                                        }
+                                    })
+                                    .show();
                         }
                     }
             );
