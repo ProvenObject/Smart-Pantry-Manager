@@ -2,6 +2,8 @@ package com.provenobject.smartpantrymanager;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,12 +32,15 @@ public class SuggestedRecipesActivity extends AppCompatActivity {
     private RecipeMatcher recipeMatcher;
     private RecipeAdapter recipeAdapter;
 
+    private TextView tvNoRecipes;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_suggested_recipes);
 
         recyclerRecipes = findViewById(R.id.recyclerRecipes);
+        tvNoRecipes = findViewById(R.id.tvNoRecipes);
 
         databaseHelper = new DatabaseHelper(this);
         recipeMatcher = new RecipeMatcher();
@@ -73,6 +78,13 @@ public class SuggestedRecipesActivity extends AppCompatActivity {
             if (canMake) {
                 suggestedRecipes.add(recipe);
             }
+        }
+        if (suggestedRecipes.isEmpty()) {
+            recyclerRecipes.setVisibility(View.GONE);
+            tvNoRecipes.setVisibility(View.VISIBLE);
+        } else {
+            recyclerRecipes.setVisibility(View.VISIBLE);
+            tvNoRecipes.setVisibility(View.GONE);
         }
 
         recipeAdapter = new RecipeAdapter(
