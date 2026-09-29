@@ -55,6 +55,17 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+        Button btnSuggestedRecipes = findViewById(R.id.btnSuggestedRecipes);
+
+        btnSuggestedRecipes.setOnClickListener(v -> {
+            Intent intent = new Intent(
+                    MainActivity.this,
+                    SuggestedRecipesActivity.class
+            );
+
+            startActivity(intent);
+        });
+
         loadPantryItems();
     }
 
