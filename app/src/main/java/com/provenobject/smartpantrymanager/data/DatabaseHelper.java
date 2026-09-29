@@ -18,7 +18,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // Database information
     private static final String DATABASE_NAME = "smart_pantry.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 4;
 
     // Pantry table
     public static final String TABLE_PANTRY = "pantry_items";
@@ -128,6 +128,148 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         new RecipeIngredient(0, "tomato", 1, "items")
                 }
         );
+
+        addSeedRecipe(
+                db,
+                "French Toast",
+                "Beat the eggs with milk and sugar. Dip the bread into the mixture and cook in a heated pan until golden.",
+                new RecipeIngredient[]{
+                        new RecipeIngredient(0, "bread", 2, "slices"),
+                        new RecipeIngredient(0, "eggs", 2, "items"),
+                        new RecipeIngredient(0, "milk", 100, "ml"),
+                        new RecipeIngredient(0, "sugar", 15, "g")
+                }
+        );
+
+        addSeedRecipe(
+                db,
+                "Omelette",
+                "Beat the eggs and cook them in a heated pan until set.",
+                new RecipeIngredient[]{
+                        new RecipeIngredient(0, "eggs", 3, "items"),
+                        new RecipeIngredient(0, "milk", 30, "ml"),
+                        new RecipeIngredient(0, "butter", 10, "g")
+                }
+        );
+
+        addSeedRecipe(
+                db,
+                "Egg Fried Rice",
+                "Cook the eggs and rice together in a heated pan and stir until well combined.",
+                new RecipeIngredient[]{
+                        new RecipeIngredient(0, "rice", 200, "g"),
+                        new RecipeIngredient(0, "eggs", 2, "items"),
+                        new RecipeIngredient(0, "onion", 1, "items")
+                }
+        );
+
+        addSeedRecipe(
+                db,
+                "Tomato Pasta",
+                "Cook the pasta and combine it with cooked tomatoes and onion.",
+                new RecipeIngredient[]{
+                        new RecipeIngredient(0, "pasta", 200, "g"),
+                        new RecipeIngredient(0, "tomato", 2, "items"),
+                        new RecipeIngredient(0, "onion", 1, "items")
+                }
+        );
+
+        addSeedRecipe(
+                db,
+                "Chicken Pasta",
+                "Cook the pasta and chicken thoroughly, then combine them.",
+                new RecipeIngredient[]{
+                        new RecipeIngredient(0, "pasta", 200, "g"),
+                        new RecipeIngredient(0, "chicken", 200, "g"),
+                        new RecipeIngredient(0, "onion", 1, "items")
+                }
+        );
+
+        addSeedRecipe(
+                db,
+                "Grilled Cheese Sandwich",
+                "Place cheese between slices of bread and cook in a heated pan until the bread is golden and the cheese melts.",
+                new RecipeIngredient[]{
+                        new RecipeIngredient(0, "bread", 2, "slices"),
+                        new RecipeIngredient(0, "cheese", 50, "g"),
+                        new RecipeIngredient(0, "butter", 10, "g")
+                }
+        );
+
+        addSeedRecipe(
+                db,
+                "Chicken Wrap",
+                "Cook the chicken thoroughly and wrap it with tomato and onion in a tortilla.",
+                new RecipeIngredient[]{
+                        new RecipeIngredient(0, "chicken", 150, "g"),
+                        new RecipeIngredient(0, "tortilla", 1, "item"),
+                        new RecipeIngredient(0, "tomato", 1, "items"),
+                        new RecipeIngredient(0, "onion", 1, "items")
+                }
+        );
+
+        addSeedRecipe(
+                db,
+                "Rice and Eggs",
+                "Cook the rice and eggs separately, then combine them.",
+                new RecipeIngredient[]{
+                        new RecipeIngredient(0, "rice", 200, "g"),
+                        new RecipeIngredient(0, "eggs", 2, "items")
+                }
+        );
+
+        addSeedRecipe(
+                db,
+                "Chicken and Tomato Rice",
+                "Cook the chicken and rice thoroughly, then combine them with tomato.",
+                new RecipeIngredient[]{
+                        new RecipeIngredient(0, "chicken", 200, "g"),
+                        new RecipeIngredient(0, "rice", 200, "g"),
+                        new RecipeIngredient(0, "tomato", 2, "items")
+                }
+        );
+
+        addSeedRecipe(
+                db,
+                "Tomato Omelette",
+                "Beat the eggs and cook them with tomato in a heated pan.",
+                new RecipeIngredient[]{
+                        new RecipeIngredient(0, "eggs", 3, "items"),
+                        new RecipeIngredient(0, "tomato", 1, "items"),
+                        new RecipeIngredient(0, "butter", 10, "g")
+                }
+        );
+
+        addSeedRecipe(
+                db,
+                "Egg Sandwich",
+                "Cook the eggs and place them between slices of bread.",
+                new RecipeIngredient[]{
+                        new RecipeIngredient(0, "eggs", 2, "items"),
+                        new RecipeIngredient(0, "bread", 2, "slices")
+                }
+        );
+
+        addSeedRecipe(
+                db,
+                "Simple Pasta",
+                "Cook the pasta in boiling water until tender.",
+                new RecipeIngredient[]{
+                        new RecipeIngredient(0, "pasta", 200, "g")
+                }
+        );
+
+        addSeedRecipe(
+                db,
+                "Chicken Fried Rice",
+                "Cook the chicken, rice and eggs together in a heated pan and stir until well combined.",
+                new RecipeIngredient[]{
+                        new RecipeIngredient(0, "chicken", 150, "g"),
+                        new RecipeIngredient(0, "rice", 200, "g"),
+                        new RecipeIngredient(0, "eggs", 2, "items"),
+                        new RecipeIngredient(0, "onion", 1, "items")
+                }
+        );
     }
 
     private void addSeedRecipe(
@@ -136,6 +278,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             String preparationSteps,
             RecipeIngredient[] ingredients
     ) {
+
+        Cursor cursor = db.query(
+                TABLE_RECIPES,
+                new String[]{RECIPE_ID},
+                RECIPE_NAME + " = ?",
+                new String[]{name},
+                null,
+                null,
+                null
+        );
+
+        if (cursor.moveToFirst()) {
+            cursor.close();
+            return;
+        }
+
+        cursor.close();
 
         Recipe recipe = new Recipe(
                 name,
@@ -175,16 +334,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         seedRecipes(db);
     }
+
     @Override
-    public void onUpgrade(
-            SQLiteDatabase db,
-            int oldVersion,
-            int newVersion
-    ) {
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
         if (oldVersion < 2) {
             db.execSQL(CREATE_RECIPE_TABLE);
             db.execSQL(CREATE_RECIPE_INGREDIENT_TABLE);
+            seedRecipes(db);
+        }
 
+        if (oldVersion < 3) {
+            seedRecipes(db);
+        }
+
+        if (oldVersion < 4) {
             seedRecipes(db);
         }
     }
