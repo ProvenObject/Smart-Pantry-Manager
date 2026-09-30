@@ -7,6 +7,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.app.DatePickerDialog;
+import java.util.Calendar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -41,6 +43,8 @@ public class AddEditIngredientActivity extends AppCompatActivity {
         etExpiryDate = findViewById(R.id.etExpiryDate);
 
         btnSaveIngredient = findViewById(R.id.btnSaveIngredient);
+
+        etExpiryDate.setOnClickListener(v -> showExpiryDatePicker());
 
         // Create the database helper used to store pantry items
         databaseHelper = new DatabaseHelper(this);
@@ -103,8 +107,59 @@ public class AddEditIngredientActivity extends AppCompatActivity {
         btnSaveIngredient.setOnClickListener(v -> saveIngredient());
     }
 
-    // Validates the ingredient form and saves the pantry item to the local SQLite database
+    private void showExpiryDatePicker() {
 
+        Calendar calendar = Calendar.getInstance();
+
+        String existingDate = etExpiryDate.getText().toString().trim();
+
+        if (!existingDate.isEmpty()) {
+
+            try {
+                String[] dateParts = existingDate.split("/");
+
+                int day = Integer.parseInt(dateParts[0]);
+                int month = Integer.parseInt(dateParts[1]) - 1;
+                int year = Integer.parseInt(dateParts[2]);
+
+                calendar.set(year, month, day);
+
+            } catch (Exception e) {
+                // If the existing date cannot be read,
+                // the picker will simply use today's date.
+            }
+        }
+
+        DatePickerDialog datePickerDialog =
+                new DatePickerDialog(
+                        this,
+                        (view, year, month, dayOfMonth) -> {
+
+                            String selectedDate =
+                                    String.format(
+                                            "%02d/%02d/%04d",
+                                            dayOfMonth,
+                                            month + 1,
+                                            year
+                                    );
+
+                            etExpiryDate.setText(selectedDate);
+                        },
+                        calendar.get(Calendar.YEAR),
+                        calendar.get(Calendar.MONTH),
+                        calendar.get(Calendar.DAY_OF_MONTH)
+                );
+
+        datePickerDialog.setButton(
+                DatePickerDialog.BUTTON_NEUTRAL,
+                "Clear",
+                (dialog, which) -> etExpiryDate.setText("")
+        );
+
+        datePickerDialog.show();
+    }
+
+    // Validates the ingredient form and saves the pantry item to the local SQLite database
     private void saveIngredient() {
 
         String name = etIngredientName.getText().toString().trim();

@@ -32,7 +32,9 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:paddingBottom="16dp"
+        android:clipToPadding="false" />
 
     <TextView
         android:id="@+id/tvEmptyMessage"
@@ -53,12 +55,16 @@
         android:id="@+id/btnSuggestedRecipes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Suggested Recipes" />
+        android:text="Suggested Recipes"
+        android:backgroundTint="@color/pantry_green"
+        android:textColor="@color/white" />
 
     <Button
         android:id="@+id/btnSettings"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Settings" />
+        android:text="Settings"
+        android:background="@drawable/settings_button_background"
+        android:textColor="@color/pantry_brown" />
 
 </LinearLayout>
