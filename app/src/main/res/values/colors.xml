@@ -1,5 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!-- Main app colours -->
+    <color name="pantry_brown">#6D4C41</color>
+    <color name="pantry_dark_brown">#4E342E</color>
+    <color name="pantry_light_brown">#8D6E63</color>
+
+    <!-- Food-inspired accent -->
+    <color name="pantry_green">#7B8F3A</color>
+
+    <!-- Background and surfaces -->
+    <color name="pantry_cream">#FFF8F0</color>
+    <color name="pantry_surface">#FFFFFFFF</color>
+
+    <!-- Text -->
+    <color name="pantry_text">#3E2723</color>
+    <color name="pantry_secondary_text">#795548</color>
+
+    <!-- Basic colours -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
 </resources>
