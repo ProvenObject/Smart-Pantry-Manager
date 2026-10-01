@@ -132,6 +132,15 @@ public class RecipeMatcher {
         if (pantryVolume && requiredVolume) {
             return true;
         }
+        if ((pantry.equals("item") || pantry.equals("items"))
+                && (required.equals("item") || required.equals("items"))) {
+            return true;
+        }
+
+        if ((pantry.equals("slice") || pantry.equals("slices"))
+                && (required.equals("slice") || required.equals("slices"))) {
+            return true;
+        }
 
         return pantry.equals(required);
     }
